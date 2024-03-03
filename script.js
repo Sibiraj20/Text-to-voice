@@ -2,16 +2,21 @@ let speech = new SpeechSynthesisUtterance();
 let voices = [];
 let voiceSelect = document.querySelector("select");
 
-window.speechSynthesis.onvoiceschanged = () => {
+function populateVoices() {
     voices = window.speechSynthesis.getVoices();
-    speech.voice = voices[0];
-    voices.forEach((voice, i) => (voiceSelect.options[i] = new Option(voice.name, i)));
-};
+    voiceSelect.innerHTML = "";
+    voices.forEach((voice, i) => {
+        const option = document.createElement("option");
+        option.textContent = voice.name;
+        option.setAttribute("value", i);
+        voiceSelect.appendChild(option);
+    });
+}
+
+window.speechSynthesis.onvoiceschanged = populateVoices;
 
 voiceSelect.addEventListener("change", () => {
-    if (voices.length > 0) {
-        speech.voice = voices[voiceSelect.value];
-    }
+    speech.voice = voices[voiceSelect.value];
 });
 
 document.querySelector("button").addEventListener("click", () => {
